@@ -1,0 +1,22 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Credentials
+.env
+
+# Python Cache
+__pycache__/
+*.py[cod]
+
+# Rust
+target/
+
+# Data
+data/raw/
+data/output/
+
+*.csv
+*.parquet
+*.bash
