@@ -47,6 +47,8 @@ An end-to-end data engineering platform designed to ingest, transform, and visua
     SNOWFLAKE_DATABASE=ECOMMERCE_DB
     SNOWFLAKE_SCHEMA=DBT_AKAD
     ```
+    <img width="1903" height="975" alt="image" src="https://github.com/user-attachments/assets/11c70e0c-5590-4bf7-acae-c8cacccd3a66" />
+
 
 ### Running the Dashboard
 ```bash
