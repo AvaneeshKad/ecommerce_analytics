@@ -14,7 +14,7 @@ An end-to-end data engineering platform designed to ingest, transform, and visua
 * **Systems:** Rust (Cargo)
 * **Data:** Snowflake, dbt (Data Build Tool)
 * **Orchestration/UI:** Python 3.12, Streamlit, Pandas, Plotly
-* **Environment:** WSL2 (Ubuntu), EndeavourOS
+* **Environment:** WSL2 (Ubuntu), Windows 11
 
 ## 🚀 Getting Started
 
