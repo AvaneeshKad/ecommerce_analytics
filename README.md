@@ -51,3 +51,19 @@ An end-to-end data engineering platform designed to ingest, transform, and visua
 ### Running the Dashboard
 ```bash
 streamlit run dashboard.py
+```
+
+## 📊 Risk Profiling Logic
+
+The dbt transformation layer flags transactions based on established risk profiles:
+
+    - High Installment Risk: Flagged for orders with a disproportionately high number of installments relative to the total value.
+
+    - High Value Check: Identifies transactions exceeding standard deviation thresholds for specific payment types.
+
+    - Standard: Validated low-risk transactions.
+
+### 🛡️ Security
+This project strictly utilizes python-dotenv for secret management. Database credentials, account locators, and sensitive warehouse details are stored in local environment variables and are never committed to version control.
+
+##### Developed by Avaneesh Kad — University of Cincinnati Honors Computer Science.
