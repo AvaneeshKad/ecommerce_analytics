@@ -67,6 +67,9 @@ The dbt transformation layer flags transactions based on established risk profil
 
     - Standard: Validated low-risk transactions.
 
+<img width="1763" height="936" alt="image" src="https://github.com/user-attachments/assets/91ac3e49-dd06-42a6-a49d-2893a7d20cc8" />
+
+
 ### 🛡️ Security
 This project strictly utilizes python-dotenv for secret management. Database credentials, account locators, and sensitive warehouse details are stored in local environment variables and are never committed to version control.
 
