@@ -1,16 +1,17 @@
 import streamlit as st
 import snowflake.connector
 import pandas as pd
-from dotenv import load_dotenv
+import plotly.express as px
 import os
+from dotenv import load_dotenv
 
-# 1. Setup and Config
+# Load variables from .env
 load_dotenv()
-st.set_page_config(page_title="Olist E-Commerce Analytics", layout="wide")
-st.title("📦 Olist E-Commerce Insights")
+
+st.set_page_config(page_title="Sentinel Fraud Monitor", page_icon="🛡️", layout="wide")
 
 @st.cache_resource
-def get_connect():
+def get_snowflake_conn():
     return snowflake.connector.connect(
         user=os.getenv('SNOWFLAKE_USER'),
         password=os.getenv('SNOWFLAKE_PASSWORD'),
@@ -20,52 +21,38 @@ def get_connect():
         schema=os.getenv('SNOWFLAKE_SCHEMA')
     )
 
-try:
-    conn = get_connect()
+st.title("🛡️ Sentinel: E-Commerce Risk Monitor")
 
-    # 2. Updated SQL Query with Latency Calculation
+try:
+    conn = get_snowflake_conn()
+    
+    # Logic remains the same, but now it's secure
     query = """
     SELECT 
-        payload:order_id::string as order_id,
-        payload:order_status::string as order_status,
-        DATEDIFF('day', 
-            payload:order_purchase_timestamp::timestamp, 
-            payload:order_delivered_customer_date::timestamp
-        ) as days_to_deliver
-    FROM ECOMMERCE_DB.RAW.OLIST_ORDERS_RAW
-    LIMIT 1000
+        ORDER_ID, 
+        PAYMENT_TYPE, 
+        PAYMENT_AMOUNT, 
+        TRANSACTION_RISK_PROFILE 
+    FROM ECOMMERCE_DB.DBT_AKAD.FCT_ORDER_PAYMENTS
     """
     
     df = pd.read_sql(query, conn)
-    df.columns = [col.lower().strip() for col in df.columns]
 
-    # 3. KPI Metrics Section
-    st.subheader("Quick Stats")
-    col1, col2, col3, col4 = st.columns(4)
-    
-    total_orders = len(df)
-    delivered_df = df[df['order_status'] == 'delivered']
-    
-    avg_delivery = delivered_df['days_to_deliver'].mean() if not delivered_df.empty else 0
+    # Metrics Row
+    m1, m2, m3 = st.columns(3)
+    m1.metric("Total Transactions", f"{len(df):,}")
+    m2.metric("Flagged Risk", len(df[df['TRANSACTION_RISK_PROFILE'] != 'standard']))
+    m3.metric("Avg Value", f"${df['PAYMENT_AMOUNT'].mean():.2f}")
 
-    col1.metric("Total Orders", total_orders)
-    col2.metric("Delivered", len(delivered_df))
-    col3.metric("Canceled", len(df[df['order_status'] == 'canceled']))
-    col4.metric("Avg Delivery Time", f"{avg_delivery:.1f} Days")
+    # Charts
+    c1, c2 = st.columns(2)
+    with c1:
+        st.plotly_chart(px.pie(df, names='TRANSACTION_RISK_PROFILE', hole=0.4), use_container_width=True)
+    with c2:
+        st.plotly_chart(px.histogram(df, x='PAYMENT_TYPE', color='TRANSACTION_RISK_PROFILE', barmode='group'), use_container_width=True)
 
-    # 4. Visualizations
-    st.divider()
-    left_col, right_col = st.columns(2)
-
-    with left_col:
-        st.subheader("Delivery Latency (Days)")
-        if not delivered_df.empty:
-            # Histogram of delivery days
-            st.bar_chart(delivered_df['days_to_deliver'].value_counts().sort_index())
-
-    with right_col:
-        st.subheader("Data Preview (Structured)")
-        st.dataframe(df.head(10), use_container_width=True)
+    st.subheader("🕵️ Transaction Audit")
+    st.dataframe(df, width='stretch')
 
 except Exception as e:
-    st.error(f"❌ Dashboard Error: {e}")
+    st.error(f"Connection Error: {e}")
