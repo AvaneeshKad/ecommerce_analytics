@@ -4,7 +4,6 @@ pandas==2.2.2
 python-dotenv==1.0.1
 
 # --- Cloud & Database Connectors ---
-azure-storage-blob==12.20.0
 snowflake-connector-python==3.10.1
 
 # --- Transformation & Modeling ---
