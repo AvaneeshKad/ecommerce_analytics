@@ -52,6 +52,8 @@ An end-to-end data engineering platform designed to ingest, transform, and visua
 ```bash
 streamlit run dashboard.py
 ```
+<img width="1905" height="969" alt="image" src="https://github.com/user-attachments/assets/a7851def-6fb0-4d37-a1a4-bc0bd261cd64" />
+
 
 ## 📊 Risk Profiling Logic
 
